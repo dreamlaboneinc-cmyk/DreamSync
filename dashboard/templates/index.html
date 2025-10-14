@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><title>DreamSync Dashboard</title>
+<script src="/static/dashboard.js?v=rev6" defer></script><script src="https://cdn.tailwindcss.com"></script>
+</head><body class="bg-slate-950 text-slate-100"><div class="max-w-6xl mx-auto p-6">
+<h1 class="text-3xl font-bold mb-4">DreamSync Dashboard</h1>
+<div id="usage" class="mb-6 p-4 rounded bg-slate-900 border border-slate-800"></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="p-4 rounded bg-slate-900 border border-slate-800"><h2 class="font-semibold mb-2">Active Apps</h2><ul id="apps" class="space-y-1 text-sm"></ul></div>
+  <div class="p-4 rounded bg-slate-900 border border-slate-800"><h2 class="font-semibold mb-2">Server Health</h2><pre id="health" class="text-xs whitespace-pre-wrap"></pre></div>
+</div>
+<div class="mt-6 p-4 rounded bg-slate-900 border border-slate-800"><h2 class="font-semibold mb-2">Recent Alerts</h2><pre id="alerts" class="text-xs whitespace-pre-wrap"></pre></div>
+<p class="text-xs mt-6 opacity-70">Auto-refreshes every 10s.</p></div></body></html>
