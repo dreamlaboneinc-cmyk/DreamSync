@@ -1,1 +1,10 @@
-this is the latest server version
+If this file is changed, that means my pushbot and update server app commands are working.
+This edit was dome  in cursor,
+then was saved,
+then pushed by pushbot to github
+then i went to ssh and ran updatebot DreamSync
+and all the files seem to be in tact broski! 
+I wonder if that also means my DreamSync app is working?
+the bridge and all the other files?
+Godspeed, 
+Its th AGE of AI bro!
