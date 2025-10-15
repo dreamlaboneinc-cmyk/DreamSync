@@ -49,7 +49,7 @@ run apt-get install -y python3 python3-pip git jq zip unzip curl cron
 # ----- Python deps (best-effort) -----
 log "⚙️  Installing Python deps…"
 run python3 -m pip install -U pip
-run python3 -m pip install -U fastapi "uvicorn[standard]" requests pyyaml python-dotenv psutil jinja2
+run python3 -m pip install -U fastapi "python core.py
 
 # ----- Registry (alias → entry/systemd/fullname) -----
 declare -A ENTRY SYS FULL
@@ -350,7 +350,7 @@ Description=DreamSync Dashboard (FastAPI)
 After=network.target
 [Service]
 WorkingDirectory=${DS}
-ExecStart=/usr/bin/python3 -m uvicorn dashboard.main:app --host 0.0.0.0 --port 5050
+ExecStart=/usr/bin/python3 -m python core.py
 Restart=always
 User=root
 Environment=PYTHONUNBUFFERED=1
