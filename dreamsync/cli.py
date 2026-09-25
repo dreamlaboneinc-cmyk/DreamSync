@@ -9,7 +9,7 @@ from .gitops import status
 
 def main():
     p=argparse.ArgumentParser(prog="dreamsync")
-    p.add_argument("command",choices=["status","scan","verify","ai-health","mission-observe","promote","deploy"]); p.add_argument("--root",default="."); p.add_argument("--plan"); p.add_argument("--objective",default="inspect and verify repository"); p.add_argument("--message",default="DreamSync verified promotion"); p.add_argument("--sha")
+    p.add_argument("command",choices=["status","scan","verify","ai-health","mission-observe","mission-auto","promote","deploy"]); p.add_argument("--root",default="."); p.add_argument("--plan"); p.add_argument("--objective",default="inspect and verify repository"); p.add_argument("--message",default="DreamSync verified promotion"); p.add_argument("--sha")
     a=p.parse_args(); cfg=load_project(a.root); root=cfg.root
     if a.command=="status": print(status(root),end="")
     elif a.command=="scan": print(json.dumps(scan_repo(root),indent=2))
@@ -19,6 +19,9 @@ def main():
     elif a.command=="mission-observe":
         from .mission import Mission, run_observe
         print(json.dumps(run_observe(root,Mission("observe",a.objective,a.plan)),indent=2))
+    elif a.command=="mission-auto":
+        from .autonomous import run_autonomous
+        r=run_autonomous(root,a.objective,a.plan); print(json.dumps(r,indent=2)); raise SystemExit(0 if r["ok"] else 4)
     elif a.command=="promote":
         from .promotion import promote
         print(json.dumps(promote(root,a.message,True),indent=2))

@@ -52,8 +52,7 @@ def verify(root: str|Path='.') -> dict:
     gates.append(Gate('forbidden tracked files',not bad,', '.join(bad) if bad else 'clean'))
     gates.append(_secret_gate(root))
     gates.append(_run(root,'git diff --check'))
-    gates.append(_run(root,'./venv/bin/python -m pip check'))
-    for group in ('compile','lint','test','acceptance'):
+    for group in ('dependency','compile','lint','test','acceptance'):
         for cmd in cfg.verification.get(group,[]) or []: gates.append(_run(root,cmd))
     vid=str(uuid.uuid4())
     result={'verification_id':vid,'verified':all(g.ok for g in gates),'base_sha':head_sha(root),'worktree_fingerprint':fingerprint(root),'timestamp':time.time(),'gates':[asdict(g) for g in gates]}

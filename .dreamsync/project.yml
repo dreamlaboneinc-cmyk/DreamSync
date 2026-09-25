@@ -9,6 +9,7 @@ ai:
   base_url: http://127.0.0.1:8275
   billing_mode_required: FREE_ONLY
 verification:
+  dependency: ["./venv/bin/python -m pip check"]
   compile: ["./venv/bin/python -m compileall -q dreamsync tests"]
   test: ["./venv/bin/python -m unittest discover -s tests -v"]
   forbidden_tracked: [".env", "venv", ".venv"]

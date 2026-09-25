@@ -7,4 +7,7 @@ class PolicyTests(unittest.TestCase):
         with self.assertRaises(ValueError): assert_patch_path(ROOT,"../outside")
     def test_reject_env(self):
         with self.assertRaises(PermissionError): assert_patch_path(ROOT,".env")
-    def test_allow_source(self): self.assertTrue(str(assert_patch_path(ROOT,"dreamsync/cli.py")).endswith("dreamsync/cli.py"))
+    def test_reject_backup(self):
+        with self.assertRaises(PermissionError): assert_patch_path(ROOT,"backups/a.py")
+    def test_allow_source(self):
+        self.assertTrue(str(assert_patch_path(ROOT,"dreamsync/cli.py")).endswith("dreamsync/cli.py"))

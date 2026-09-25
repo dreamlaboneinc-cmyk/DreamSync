@@ -123,3 +123,8 @@ The normal path is local workspace -> deterministic DreamSync verification -> VE
 The user's paid ChatGPT/Codex access is an OPTIONAL premium reasoning/coding brain when available. It must never be a runtime dependency and DreamSync must remain fully usable without it.
 Dream API FREE_ONLY is the permanent no-paid-runtime AI path. The same DreamSync deterministic tooling owns protected-path policy, secret scanning, compile/lint/test/acceptance gates, commit/push, deployment, restart, health, and rollback regardless of which AI brain proposed an edit.
 Local PC/Cursor, GitHub authentication, and optional premium GPT/Codex wiring are external connector steps performed after the free-core engine is qualified.
+
+## Autonomous Mission Qualification — 2026-09-25
+Dream API FREE_ONLY now authenticates through the existing local client credential, which remains outside the repository. The autonomous executor accepts only structured file-write operations; AI-proposed arbitrary shell execution is not permitted.
+
+A disposable TaskApp qualification passed NEW BUILD, DEBUG, and UPGRADE workflows. Each completed under deterministic compile, unit-test, and acceptance gates. Promotion remains separate: verified edits must still pass DreamSync promotion, GitHub push, exact-SHA deployment, and production health before becoming known-good.
