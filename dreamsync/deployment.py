@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-import json, subprocess, urllib.request
+import json, subprocess, time, urllib.request
 from .config import load_project
 from .state import State
 
@@ -10,12 +10,15 @@ def _run(args, cwd: Path, check=True):
 def _service_active(name: str) -> bool:
     return subprocess.run(["systemctl","is-active","--quiet",name]).returncode == 0
 
-def _health(url: str) -> bool:
-    try:
-        with urllib.request.urlopen(url,timeout=8) as r:
-            return 200 <= r.status < 400
-    except Exception:
-        return False
+def _health(url: str, attempts: int=8, delay: float=1.0) -> bool:
+    for _ in range(attempts):
+        try:
+            with urllib.request.urlopen(url,timeout=4) as r:
+                if 200 <= r.status < 400: return True
+        except Exception:
+            pass
+        time.sleep(delay)
+    return False
 
 def deploy_exact(root: Path, sha: str) -> dict:
     cfg=load_project(root); root=cfg.root; dep=cfg.raw.get("deploy",{})
