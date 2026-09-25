@@ -1,0 +1,16 @@
+Continue my DreamSync V2 project on my Linode server. Use the persistent Remote Desktop Commander connection to localhost device ID 7f818d41-1b9f-4d00-8410-9efd747080ad. Do not use my Windows device.
+
+FIRST read these files before changing anything:
+/root/apps/DreamSync/handoff_20260925/HANDOFF.md
+/root/apps/DreamSync/handoff_20260925/DREAMSYNC_V2_BUILD.md
+Then inspect the other source snapshots in that handoff directory and the live /root/apps/DreamSync tree.
+
+Goal: build DreamSync V2 as a FREE-CORE, autonomous-first AI coding/sync/deployment system. I want to plan apps in Markdown, then have DreamSync scan repos, understand dependencies, build/debug/upgrade, patch files, compile/test, verify intended output BEFORE commit, push verified commits to GitHub, deploy the exact commit to Linode, restart the correct service, health-test production, and automatically roll back failures.
+
+Dream API FREE_ONLY is the required AI runtime. My paid ChatGPT subscription and Cursor may improve the workflow but DreamSync MUST continue functioning without either. Cursor should remain an optional local editor, not a runtime dependency. Git is source of truth and GitHub is canonical remote backup.
+
+I prefer AUTONOMOUS mode. Do not make save mean blind production deployment; save can trigger analysis/verification, but promotion requires successful deterministic gates.
+
+Start with archaeology/preservation of the existing unfinished DreamSync. Do not blindly rewrite it. Identify useful pieces, obsolete pieces, current Git state, dependencies and security issues. The old OpenAI usage monitor is obsolete and must not be a V2 dependency. Never expose keys/.env contents. Never reset databases or destructively clean app/config/data. Back up files before edits.
+
+Then proceed with the V2 build in sensible phases, verifying each phase. Give me concise progress reports showing DONE / TESTED / NEXT / BLOCKED. Do as much internally as possible; only ask me for external authorization/setup when actually required.

@@ -1,0 +1,21 @@
+version: 1
+project:
+  name: DreamSync
+  repo: /root/apps/DreamSync
+  branch: main
+mode: AUTONOMOUS
+ai:
+  provider: dream-api
+  base_url: http://127.0.0.1:8275
+  billing_mode_required: FREE_ONLY
+verification:
+  compile: ["./venv/bin/python -m compileall -q dreamsync tests"]
+  test: ["./venv/bin/python -m unittest discover -s tests -v"]
+  forbidden_tracked: [".env", "venv", ".venv"]
+deploy:
+  path: /root/apps/DreamSync
+  services: ["DreamSync.service", "DreamSyncDashboard.service"]
+  health_urls: ["http://127.0.0.1:5050/"]
+  exact_sha: true
+  rollback: true
+protected_paths: [".env", "data", "state"]
