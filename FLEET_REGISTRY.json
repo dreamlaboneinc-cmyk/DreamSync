@@ -1,0 +1,582 @@
+{
+  "version": 1,
+  "count": 30,
+  "projects": [
+    {
+      "name": "AudiobookCreator",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\AudiobookCreator",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/AudiobookCreator",
+      "live": null,
+      "services": [
+        "audiobookcreator.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "BookOracle",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\BookOracle",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/BookOracle",
+      "live": "/var/www/book_oracle",
+      "services": [
+        "book_oracle.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "CleanScript",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\CleanScript",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/CleanScript",
+      "live": null,
+      "services": [
+        "cleanscript.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "CommandOne",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\CommandOne",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/CommandOne",
+      "live": null,
+      "services": [
+        "CommandOne.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "CrystalGlassArt",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\CrystalGlassArt",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/CrystalGlassArt",
+      "live": "/var/www/crystalglassart.com",
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamAPI",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamAPI",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamAPI",
+      "live": "/opt/dream-api",
+      "services": [
+        "dream-api.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamIntelligence",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamIntelligence",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamIntelligence",
+      "live": "/root/dream_intelligence",
+      "services": [
+        "dream-intelligence.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamLabComments",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamLabComments",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamLabComments",
+      "live": "/opt/dreamlab-comments",
+      "services": [
+        "dreamlab-comments.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamLabOnePlatform",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamLabOnePlatform",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamLabOnePlatform",
+      "live": "/srv/dreamlabone",
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamLabOneWebsite",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamLabOneWebsite",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamLabOneWebsite",
+      "live": "/var/www/dreamlabone",
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamNotes",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamNotes",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamNotes",
+      "live": "/root/dream_notes",
+      "services": [
+        "dream-notes.service",
+        "dream-notes-ui.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamPortal",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamPortal",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamPortal",
+      "live": null,
+      "services": [
+        "DreamPortal.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamSync",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamSync",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamSync",
+      "live": null,
+      "services": [
+        "DreamSync.service",
+        "DreamSyncDashboard.service"
+      ],
+      "health_urls": [
+        "http://127.0.0.1:5050/"
+      ],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state"
+      ]
+    },
+    {
+      "name": "DreamSyncQualification",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamSyncQualification",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamSync",
+      "live": null,
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamTeam",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamTeam",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamTeam",
+      "live": "/root/dreamteam",
+      "services": [
+        "dreamteam-continuous-forever.service",
+        "dreamteam-continuous-ops.service",
+        "dreamteam-executive-ops.service",
+        "dreamteam-human-ux.service",
+        "slp-autonomous-email.service",
+        "sacred-light-youtube-connector.service",
+        "ai-visual-review.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamTeamAPI",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamTeamAPI",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamTeamAPI",
+      "live": "/opt/dreamteam",
+      "services": [
+        "dreamteam-api.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamTeamGmail",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamTeamGmail",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamTeamGmail",
+      "live": "/opt/dreamteam-gmail",
+      "services": [
+        "dreamteam-gmail.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamTube",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamTube",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamTube",
+      "live": null,
+      "services": [
+        "dreamtube.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "DreamVoice",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamVoice",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/DreamVoice",
+      "live": null,
+      "services": [
+        "dream-voice.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "EPUBMasterBuilder",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\EPUBMasterBuilder",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/EPUBMasterBuilder",
+      "live": null,
+      "services": [
+        "epub-master-builder.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "GenTec_Cognitive_Fabric",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\GenTec_Cognitive_Fabric",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/GenTec_Cognitive_Fabric",
+      "live": "/srv/gentec/GenTec_Cognitive_Fabric",
+      "services": [
+        "gcf-interconnect.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "MarketingIntelligenceSuite",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\MarketingIntelligenceSuite",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/MarketingIntelligenceSuite",
+      "live": null,
+      "services": [
+        "marketing_suite.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "MySolarAscend",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\MySolarAscend",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/MySolarAscend",
+      "live": "/var/www/mysolarascend",
+      "services": [
+        "mysolarascend.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "PinkPortalBookstore",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\PinkPortalBookstore",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/PinkPortalBookstore",
+      "live": "/var/www/thepinkportalbookstore.co.uk",
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "QASI_Independent_Evaluator",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\QASI_Independent_Evaluator",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/QASI_Independent_Evaluator",
+      "live": null,
+      "services": [
+        "qasi-evaluator.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "QASI_Phase1_Foundation",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\QASI_Phase1_Foundation",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/QASI_Phase1_Foundation",
+      "live": null,
+      "services": [
+        "qasi.service",
+        "qasi-cognitive-prototype.service"
+      ],
+      "health_urls": [],
+      "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "QASI_Phase2_WholeBeing",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\QASI_Phase2_WholeBeing",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/QASI_Phase2_WholeBeing",
+      "live": null,
+      "services": [
+        "qasi-phase2.service",
+        "qai-interface.service",
+        "qasi-ui-readplane.service",
+        "qasi-qai-living-runtime.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "QuantumTradeAI",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\QuantumTradeAI",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/QuantumTradeAI",
+      "live": null,
+      "services": [
+        "quantumtrade.service",
+        "quantumtrade-labs.service",
+        "quantumtrade-challenger.service",
+        "quantumtrade-aug01.service",
+        "quantumtrade-aug02.service",
+        "quantumtrade-aug03.service",
+        "quantumtrade-aug04.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "SacredLightBooks",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\SacredLightBooks",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/SacredLightBooks",
+      "live": "/var/www/sacredlightbooks.com",
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "SolarAscend",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\SolarAscend",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/SolarAscend",
+      "live": null,
+      "services": [
+        "SolarAscend.service"
+      ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    }
+  ]
+}
