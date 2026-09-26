@@ -21,9 +21,18 @@ SECRET_RULES={
 TEXT_SUFFIX={'.py','.js','.ts','.tsx','.jsx','.json','.yml','.yaml','.toml','.ini','.cfg','.md','.txt','.sh','.ps1','.html','.css','.env'}
 
 def _run(root: Path, cmd: str) -> Gate:
-    p=subprocess.run(cmd,cwd=root,shell=True,text=True,capture_output=True)
-    detail=(p.stdout+p.stderr).strip()[-4000:]
-    return Gate(cmd,p.returncode==0,detail)
+    import sys
+
+    cmd = cmd.replace("{python}", f'"{sys.executable}"')
+    p = subprocess.run(
+        cmd,
+        cwd=root,
+        shell=True,
+        text=True,
+        capture_output=True,
+    )
+    detail = (p.stdout + p.stderr).strip()[-4000:]
+    return Gate(cmd, p.returncode == 0, detail)
 
 def fingerprint(root: Path) -> str:
     h=hashlib.sha256()

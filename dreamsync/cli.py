@@ -1,32 +1,130 @@
 from __future__ import annotations
-import argparse, json
-from pathlib import Path
+
+import argparse
+import json
+import subprocess
+
 from .config import load_project
 from .dream_api import DreamAPIClient
+from .gitops import status
 from .scanner import scan_repo
 from .verify import verify
-from .gitops import status
+
+
+def _head_sha(root):
+    return subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout.strip()
+
 
 def main():
-    p=argparse.ArgumentParser(prog="dreamsync")
-    p.add_argument("command",choices=["status","scan","verify","ai-health","mission-observe","mission-auto","promote","deploy"]); p.add_argument("--root",default="."); p.add_argument("--plan"); p.add_argument("--objective",default="inspect and verify repository"); p.add_argument("--message",default="DreamSync verified promotion"); p.add_argument("--sha")
-    a=p.parse_args(); cfg=load_project(a.root); root=cfg.root
-    if a.command=="status": print(status(root),end="")
-    elif a.command=="scan": print(json.dumps(scan_repo(root),indent=2))
-    elif a.command=="verify":
-        r=verify(root); print(json.dumps(r,indent=2)); raise SystemExit(0 if r["verified"] else 2)
-    elif a.command=="ai-health": print(json.dumps(DreamAPIClient(cfg.ai.get("base_url","http://127.0.0.1:8275")).health(),indent=2))
-    elif a.command=="mission-observe":
+    parser = argparse.ArgumentParser(prog="dreamsync")
+    parser.add_argument(
+        "command",
+        choices=[
+            "status",
+            "scan",
+            "verify",
+            "ai-health",
+            "mission-observe",
+            "mission-auto",
+            "promote",
+            "deploy",
+            "deploy-receive",
+        ],
+    )
+    parser.add_argument("--root", default=".")
+    parser.add_argument("--plan")
+    parser.add_argument(
+        "--objective",
+        default="inspect and verify repository",
+    )
+    parser.add_argument(
+        "--message",
+        default="DreamSync verified promotion",
+    )
+    parser.add_argument("--sha")
+
+    args = parser.parse_args()
+    cfg = load_project(args.root)
+    root = cfg.root
+
+    if args.command == "status":
+        print(status(root), end="")
+
+    elif args.command == "scan":
+        print(json.dumps(scan_repo(root), indent=2))
+
+    elif args.command == "verify":
+        result = verify(root)
+        print(json.dumps(result, indent=2))
+        raise SystemExit(0 if result["verified"] else 2)
+
+    elif args.command == "ai-health":
+        client = DreamAPIClient(
+            cfg.ai.get("base_url", "http://127.0.0.1:8275")
+        )
+        print(json.dumps(client.health(), indent=2))
+
+    elif args.command == "mission-observe":
         from .mission import Mission, run_observe
-        print(json.dumps(run_observe(root,Mission("observe",a.objective,a.plan)),indent=2))
-    elif a.command=="mission-auto":
+
+        result = run_observe(
+            root,
+            Mission("observe", args.objective, args.plan),
+        )
+        print(json.dumps(result, indent=2))
+
+    elif args.command == "mission-auto":
         from .autonomous import run_autonomous
-        r=run_autonomous(root,a.objective,a.plan); print(json.dumps(r,indent=2)); raise SystemExit(0 if r["ok"] else 4)
-    elif a.command=="promote":
+
+        result = run_autonomous(
+            root,
+            args.objective,
+            args.plan,
+        )
+        print(json.dumps(result, indent=2))
+        raise SystemExit(0 if result["ok"] else 4)
+
+    elif args.command == "promote":
         from .promotion import promote
-        print(json.dumps(promote(root,a.message,True),indent=2))
-    elif a.command=="deploy":
-        from .deployment import deploy_exact
-        sha=a.sha or __import__("subprocess").run(["git","rev-parse","HEAD"],cwd=root,text=True,capture_output=True,check=True).stdout.strip()
-        r=deploy_exact(root,sha); print(json.dumps(r,indent=2)); raise SystemExit(0 if r["ok"] else 3)
-if __name__=="__main__": main()
+
+        print(
+            json.dumps(
+                promote(root, args.message, True),
+                indent=2,
+            )
+        )
+
+    elif args.command == "deploy":
+        sha = args.sha or _head_sha(root)
+
+        if cfg.controller.get("ssh_target"):
+            from .controller import remote_deploy
+
+            result = remote_deploy(root, sha)
+        else:
+            from .deployment import deploy_exact
+
+            result = deploy_exact(root, sha)
+
+        print(json.dumps(result, indent=2))
+        raise SystemExit(0 if result["ok"] else 3)
+
+    elif args.command == "deploy-receive":
+        if not args.sha:
+            raise SystemExit("deploy-receive requires --sha")
+
+        from .receiver import receive_exact
+
+        result = receive_exact(root, args.sha)
+        print(json.dumps(result, indent=2))
+        raise SystemExit(0 if result["ok"] else 3)
+
+
+if __name__ == "__main__":
+    main()

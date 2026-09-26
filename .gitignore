@@ -17,3 +17,5 @@ backups/
 
 !.dreamsync/
 !.dreamsync/project.yml
+
+.dreamsync/local.yml

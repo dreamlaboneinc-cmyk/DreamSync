@@ -1,0 +1,79 @@
+from __future__ import annotations
+
+from pathlib import Path
+import re
+import shlex
+import subprocess
+
+from .config import load_project
+
+
+_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+_SSH_TARGET_RE = re.compile(r"^[A-Za-z0-9_.@-]+$")
+_REMOTE_PATH_RE = re.compile(r"^/[A-Za-z0-9_./-]+$")
+
+
+def _git(root: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", *args],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def remote_deploy(root: str | Path = ".", sha: str | None = None) -> dict:
+    cfg = load_project(root)
+    root = cfg.root
+    controller = cfg.controller
+
+    ssh_target = controller.get("ssh_target")
+    remote_project = controller.get("remote_project")
+
+    if not ssh_target or not remote_project:
+        raise RuntimeError("local controller configuration is incomplete")
+    if not _SSH_TARGET_RE.fullmatch(ssh_target):
+        raise RuntimeError("invalid SSH target")
+    if not _REMOTE_PATH_RE.fullmatch(remote_project):
+        raise RuntimeError("invalid remote project path")
+
+    if _git(root, "status", "--porcelain"):
+        raise RuntimeError("local worktree must be clean before deployment")
+
+    requested_sha = sha or _git(root, "rev-parse", "HEAD")
+    if not _SHA_RE.fullmatch(requested_sha):
+        raise RuntimeError("invalid deployment SHA")
+
+    remote_sha = _git(root, "ls-remote", "origin", "refs/heads/main").split()[0]
+    if remote_sha != requested_sha:
+        raise RuntimeError(
+            "deployment blocked: local HEAD does not match GitHub main"
+        )
+
+    project = shlex.quote(remote_project)
+    python = shlex.quote(f"{remote_project}/venv/bin/python")
+    command = (
+        f"cd {project} && "
+        f"{python} -m dreamsync.cli deploy-receive --sha {requested_sha}"
+    )
+
+    result = subprocess.run(
+        ["ssh", ssh_target, command],
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            "remote deployment failed: "
+            + (result.stderr.strip() or result.stdout.strip())
+        )
+
+    return {
+        "ok": True,
+        "sha": requested_sha,
+        "ssh_target": ssh_target,
+        "remote_project": remote_project,
+        "remote_output": result.stdout.strip(),
+    }
