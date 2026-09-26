@@ -10,16 +10,7 @@ while($true){
     $repo=$_.FullName; $name=$_.Name
     if(!(Test-Path (Join-Path $repo '.git'))){ return }
     $dirty=@(& git -C $repo status --porcelain=v1 --untracked-files=all 2>$null)
-    if(!$dirty){
-      & git -C $repo fetch -q origin main 2>$null
-      $head=& git -C $repo rev-parse HEAD 2>$null
-      $remote=& git -C $repo rev-parse origin/main 2>$null
-      if($head -and $remote -and $head -ne $remote){
-        & git -C $repo merge --ff-only origin/main 2>$null
-        if($LASTEXITCODE -eq 0){ Log "PULLED $name $remote" }
-      }
-      return
-    }
+    if(!$dirty){ return }
     & git -C $repo diff --check 2>$null
     if($LASTEXITCODE -ne 0){ Log "BLOCKED_DIFFCHECK $name"; return }
     & git -C $repo add -A 2>$null
@@ -31,11 +22,10 @@ while($true){
     & git -C $repo commit -q -m $msg 2>$null
     if($LASTEXITCODE -ne 0){ return }
     & git -C $repo push -q origin main 2>$null
-    if($LASTEXITCODE -ne 0){ Log "PUSH_FAILED $name"; return }
-    $sha=& git -C $repo rev-parse HEAD 2>$null
-    $remoteCmd="cd /root/apps/$name && git fetch -q origin main && git reset -q --hard origin/main"
-    & ssh sacredlight $remoteCmd 2>$null
-    if($LASTEXITCODE -eq 0){ Log "SYNCED $name $sha" } else { Log "SERVER_SYNC_FAILED $name $sha" }
+    if($LASTEXITCODE -eq 0){
+      $sha=& git -C $repo rev-parse HEAD 2>$null
+      Log "PUSHED $name $sha"
+    } else { Log "PUSH_FAILED $name" }
   }
   Start-Sleep -Seconds $PollSeconds
 }
