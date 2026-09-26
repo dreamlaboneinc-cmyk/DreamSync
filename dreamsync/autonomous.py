@@ -67,7 +67,7 @@ def apply_operations(root: Path, proposal: dict) -> list[str]:
         target.parent.mkdir(parents=True,exist_ok=True)
         old=target.read_text(errors="replace") if target.exists() else None
         if old!=content:
-            target.write_text(content); changed.append(rel)
+            target.write_text(content,encoding="utf-8",newline="\n"); changed.append(rel)
     return changed
 
 def run_autonomous(root: Path, objective: str, plan_file: str|None=None, retries: int=3) -> dict:

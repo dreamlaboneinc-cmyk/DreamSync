@@ -48,6 +48,8 @@ def new_project(workspace: str | Path, name: str) -> dict:
     subprocess.run(["git", "init", "-b", "main"], cwd=root, check=True, capture_output=True)
     discovery = write_discovery(root)
     _protocol(root, name, discovery)
+    subprocess.run(["git","add","-A"],cwd=root,check=True,capture_output=True)
+    subprocess.run(["git","-c","user.name=DreamSync","-c","user.email=dreamsync@local","commit","-m","Initialize DreamSync project"],cwd=root,check=True,capture_output=True)
     return {"ok": True, "action": "new", "root": str(root), "discovery": discovery}
 
 
