@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 30,
+  "count": 32,
   "projects": [
     {
       "name": "AudiobookCreator",
@@ -246,23 +246,6 @@
       ]
     },
     {
-      "name": "DreamSyncQualification",
-      "laptop": "C:\\Users\\PC1\\DreamLab\\DreamSyncQualification",
-      "github": "origin/main",
-      "canonical_linode": "/root/apps/DreamSync",
-      "live": null,
-      "services": [],
-      "health_urls": [],
-      "type": "unknown",
-      "runtime_exclusions": [
-        ".env",
-        "data",
-        "state",
-        ".git",
-        "backups"
-      ]
-    },
-    {
       "name": "DreamTeam",
       "laptop": "C:\\Users\\PC1\\DreamLab\\DreamTeam",
       "github": "origin/main",
@@ -364,6 +347,23 @@
       ]
     },
     {
+      "name": "Dwella",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\Dwella",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/Dwella",
+      "live": null,
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
       "name": "EPUBMasterBuilder",
       "laptop": "C:\\Users\\PC1\\DreamLab\\EPUBMasterBuilder",
       "github": "origin/main",
@@ -393,6 +393,23 @@
       ],
       "health_urls": [],
       "type": "python",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "Impact",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\Impact",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/Impact",
+      "live": null,
+      "services": [],
+      "health_urls": [],
+      "type": "unknown",
       "runtime_exclusions": [
         ".env",
         "data",
@@ -568,6 +585,23 @@
       "services": [
         "SolarAscend.service"
       ],
+      "health_urls": [],
+      "type": "unknown",
+      "runtime_exclusions": [
+        ".env",
+        "data",
+        "state",
+        ".git",
+        "backups"
+      ]
+    },
+    {
+      "name": "TheOracle",
+      "laptop": "C:\\Users\\PC1\\DreamLab\\TheOracle",
+      "github": "origin/main",
+      "canonical_linode": "/root/apps/TheOracle",
+      "live": null,
+      "services": [],
       "health_urls": [],
       "type": "unknown",
       "runtime_exclusions": [

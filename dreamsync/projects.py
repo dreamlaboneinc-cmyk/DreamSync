@@ -32,18 +32,21 @@ def _protocol(root: Path, name: str, discovery: dict) -> None:
     for item in required:
         if item not in lines: lines.append(item)
     ignore.write_text("\n".join(lines).strip()+"\n",encoding="utf-8",newline="\n")
-    (root / "BUILD.md").write_text(
-        f"# {name} Build Contract\n\n## Goal\nDescribe the intended app or change.\n\n"
-        "## Requirements\n- Define required behavior.\n\n## Acceptance Criteria\n"
-        "- Define observable proof that the mission is complete.\n"
-    )
-    (root / "DECISIONS.md").write_text(
-        "# Project Decisions\n\nRecord durable decisions that future chats and agents must preserve.\n"
-    )
-    (root / "ARCHITECTURE.md").write_text(
-        f"# Architecture\n\nDetected project type: **{discovery['primary_type']}**.\n\n"
-        "This file is refined as DreamSync learns the project.\n"
-    )
+    if not (root / "BUILD.md").exists():
+        (root / "BUILD.md").write_text(
+            f"# {name} Build Contract\n\n## Goal\nDescribe the intended app or change.\n\n"
+            "## Requirements\n- Define required behavior.\n\n## Acceptance Criteria\n"
+            "- Define observable proof that the mission is complete.\n"
+        )
+    if not (root / "DECISIONS.md").exists():
+        (root / "DECISIONS.md").write_text(
+            "# Project Decisions\n\nRecord durable decisions that future chats and agents must preserve.\n"
+        )
+    if not (root / "ARCHITECTURE.md").exists():
+        (root / "ARCHITECTURE.md").write_text(
+            f"# Architecture\n\nDetected project type: **{discovery['primary_type']}**.\n\n"
+            "This file is refined as DreamSync learns the project.\n"
+        )
 
 
 def new_project(workspace: str | Path, name: str) -> dict:

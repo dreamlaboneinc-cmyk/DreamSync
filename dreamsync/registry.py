@@ -5,6 +5,7 @@ import json, yaml
 def build_registry(workspace: str|Path) -> dict:
     base=Path(workspace).resolve(); projects=[]
     for root in sorted(base.iterdir()):
+        if root.name == "DreamSyncQualification": continue
         cfg=root/".dreamsync"/"project.yml"
         if not (root/".git").exists() or not cfg.exists(): continue
         data=yaml.safe_load(cfg.read_text()) or {}
