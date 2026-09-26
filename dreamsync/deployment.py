@@ -36,7 +36,13 @@ def _sync_target(root: Path, target: str | None) -> None:
 
 def deploy_exact(root: Path, sha: str) -> dict:
     cfg=load_project(root); root=cfg.root; dep=cfg.raw.get("deploy",{})
-    if _run(["git","status","--porcelain"],root).stdout.strip():
+    status=_run(["git","status","--porcelain"],root).stdout.strip()
+    dirty=[]
+    for line in status.splitlines():
+        rel=line[3:].replace("\\", "/") if len(line)>3 else ""
+        if rel==".env" or rel.startswith(("data/","state/","backups/","backup/","venv/",".venv/","__pycache__/")): continue
+        dirty.append(line)
+    if dirty:
         raise RuntimeError("deployment requires a clean working tree")
     _run(["git","fetch","origin","main"],root)
     remote=_run(["git","rev-parse","origin/main"],root).stdout.strip()
