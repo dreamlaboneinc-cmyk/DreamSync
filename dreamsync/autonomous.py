@@ -45,7 +45,14 @@ Schema: {"summary":"short","operations":[{"action":"write","path":"relative/path
 Rules: solve the objective using the supplied repository and plan. Use only write operations. Never write secrets, .env, credentials, state, data, backups, .git, or virtual environments. Do not propose shell commands. Preserve working code unless a change is needed. Include complete content for every file you change. If verification failures are supplied, repair them.
 CONTEXT:
 '''+_context(root,plan_file,objective,failures)
-    raw=DreamAPIClient(cfg.ai.get("base_url","http://127.0.0.1:8275"),timeout=120).complete(prompt)
+    client=DreamAPIClient(cfg.ai.get("base_url","http://127.0.0.1:8275"),timeout=120)
+    try:
+        raw=client.complete(prompt)
+    except Exception:
+        if not cfg.controller.get("ssh_target"):
+            raise
+        from .controller import remote_ai_complete
+        raw=remote_ai_complete(root,prompt)
     obj=_json_object(raw)
     if not isinstance(obj.get("operations"),list): raise ValueError("AI operations must be a list")
     return obj

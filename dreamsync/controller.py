@@ -4,6 +4,7 @@ from pathlib import Path
 import re
 import shlex
 import subprocess
+import base64
 
 from .config import load_project
 
@@ -23,6 +24,31 @@ def _git(root: Path, *args: str) -> str:
     )
     return result.stdout.strip()
 
+
+
+def remote_ai_complete(root: str | Path, prompt: str) -> str:
+    """Run Dream API inference on the trusted Linode without exporting its credential."""
+    cfg = load_project(root)
+    controller = cfg.controller
+    ssh_target = controller.get("ssh_target")
+    if not ssh_target or not _SSH_TARGET_RE.fullmatch(ssh_target):
+        raise RuntimeError("valid SSH target required for remote AI")
+    runtime_root = controller.get("dreamsync_runtime", "/root/apps/DreamSync")
+    if not _REMOTE_PATH_RE.fullmatch(runtime_root):
+        raise RuntimeError("invalid DreamSync runtime path")
+    encoded = base64.b64encode(prompt.encode("utf-8")).decode("ascii")
+    code = (
+        "import base64; from dreamsync.dream_api import DreamAPIClient; "
+        f"p=base64.b64decode('{encoded}').decode(); print(DreamAPIClient().complete(p))"
+    )
+    command = f"PYTHONPATH={shlex.quote(runtime_root)} {shlex.quote(runtime_root + '/venv/bin/python')} -c {shlex.quote(code)}"
+    result = subprocess.run(
+        [controller.get("ssh_executable", "ssh"), ssh_target, command],
+        text=True, capture_output=True, timeout=180
+    )
+    if result.returncode != 0:
+        raise RuntimeError("remote FREE_ONLY AI failed: " + (result.stderr.strip() or "unknown error"))
+    return result.stdout.strip()
 
 def remote_deploy(root: str | Path = ".", sha: str | None = None) -> dict:
     cfg = load_project(root)
