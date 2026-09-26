@@ -11,6 +11,11 @@ class Intent:
 
 
 RULES = (
+    ("status", ("status", "where are we")),
+    ("verify", ("verify", "test", "check")),
+    ("deploy", ("deploy", "publish", "release")),
+    ("plan", ("plan", "design", "build.md")),
+    ("discover", ("discover", "inspect", "adopt")),
     ("debug", ("fix", "bug", "broken", "error", "debug", "not working")),
     ("upgrade", ("add", "upgrade", "improve", "change", "update", "feature")),
     ("build", ("build", "create", "make", "implement")),

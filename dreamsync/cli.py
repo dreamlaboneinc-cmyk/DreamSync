@@ -30,6 +30,7 @@ def main():
             "scan",
             "verify",
             "ai-health",
+            "ai-relay",
             "mission-observe",
             "mission-auto",
             "promote",
@@ -101,6 +102,14 @@ def main():
             cfg.ai.get("base_url", "http://127.0.0.1:8275")
         )
         print(json.dumps(client.health(), indent=2))
+
+    elif args.command == "ai-relay":
+        import sys
+        prompt = sys.stdin.read()
+        if not prompt:
+            raise SystemExit("ai-relay requires prompt on stdin")
+        client = DreamAPIClient(cfg.ai.get("base_url", "http://127.0.0.1:8275"))
+        print(client.complete(prompt))
 
     elif args.command == "mission-observe":
         from .mission import Mission, run_observe

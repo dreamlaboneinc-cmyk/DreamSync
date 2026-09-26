@@ -39,5 +39,5 @@ def scan_repo(root: Path) -> dict:
         "plans":[f for f in files if Path(f).name in PLANS],
         "tests":[f for f in files if "test" in Path(f).name.lower()],
         "python_imports":_imports(root,files),
-        "recent_commits":_git(root,"log","-5","--oneline"),
+        "recent_commits":_git(root,"log","-5","--oneline") if (root/".git").exists() and subprocess.run(["git","rev-parse","--verify","HEAD"],cwd=root,capture_output=True).returncode==0 else "",
     }

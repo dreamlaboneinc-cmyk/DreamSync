@@ -43,6 +43,19 @@ def verify_project(root: str = "") -> dict:
 
 
 @mcp.tool()
+def plan_project(request: str, root: str = "") -> dict:
+    """Create or update BUILD.md using DreamSync FREE_ONLY reasoning."""
+    from .planning import create_plan
+    return create_plan(_root(root), request)
+
+
+@mcp.tool()
+def project_status(root: str = "") -> dict:
+    """Return deterministic verification for the current project."""
+    return verify(_root(root))
+
+
+@mcp.tool()
 def run_mission(kind: str, request: str, root: str = "") -> dict:
     """Run a bounded DreamSync BUILD, DEBUG, or UPGRADE autonomous mission."""
     if kind not in {"build", "debug", "upgrade"}:

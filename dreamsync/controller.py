@@ -36,15 +36,10 @@ def remote_ai_complete(root: str | Path, prompt: str) -> str:
     runtime_root = controller.get("dreamsync_runtime", "/root/apps/DreamSync")
     if not _REMOTE_PATH_RE.fullmatch(runtime_root):
         raise RuntimeError("invalid DreamSync runtime path")
-    encoded = base64.b64encode(prompt.encode("utf-8")).decode("ascii")
-    code = (
-        "import base64; from dreamsync.dream_api import DreamAPIClient; "
-        f"p=base64.b64decode('{encoded}').decode(); print(DreamAPIClient().complete(p))"
-    )
-    command = f"PYTHONPATH={shlex.quote(runtime_root)} {shlex.quote(runtime_root + '/venv/bin/python')} -c {shlex.quote(code)}"
+    command = f"cd {runtime_root} && PYTHONPATH={runtime_root} {runtime_root}/venv/bin/python -m dreamsync.cli ai-relay --root {runtime_root}"
     result = subprocess.run(
         [controller.get("ssh_executable", "ssh"), ssh_target, command],
-        text=True, capture_output=True, timeout=180
+        input=prompt, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=180
     )
     if result.returncode != 0:
         raise RuntimeError("remote FREE_ONLY AI failed: " + (result.stderr.strip() or "unknown error"))
