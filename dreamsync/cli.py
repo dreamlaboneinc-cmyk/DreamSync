@@ -41,6 +41,8 @@ def main():
             "debug",
             "upgrade",
             "chat",
+            "new",
+            "finish",
         ],
 
     )
@@ -57,8 +59,29 @@ def main():
     parser.add_argument("--sha")
     parser.add_argument("--request")
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--name")
+    parser.add_argument("--workspace")
 
     args = parser.parse_args()
+
+    if args.command in {"discover", "adopt", "new"}:
+        from pathlib import Path
+        if args.command == "new":
+            if not args.name:
+                raise SystemExit("new requires --name")
+            from .projects import new_project
+            workspace = Path(args.workspace or args.root).resolve()
+            print(json.dumps(new_project(workspace, args.name), indent=2))
+            return
+        root = Path(args.root).resolve()
+        if args.command == "discover":
+            from .discovery import write_discovery
+            print(json.dumps(write_discovery(root), indent=2))
+        else:
+            from .projects import adopt_project
+            print(json.dumps(adopt_project(root), indent=2))
+        return
+
     cfg = load_project(args.root)
     root = cfg.root
 
@@ -133,6 +156,31 @@ def main():
         from .projects import adopt_project
 
         print(json.dumps(adopt_project(root), indent=2))
+
+    elif args.command in {"build", "debug", "upgrade"}:
+        if not args.request:
+            raise SystemExit("mission requires --request")
+        from .workflow import run
+        result = run(root, args.command, args.request)
+        print(json.dumps(result, indent=2))
+        raise SystemExit(0 if result["ok"] else 4)
+
+    elif args.command == "finish":
+        from .promotion import promote
+        verified = verify(root)
+        if not verified["verified"]:
+            print(json.dumps(verified, indent=2))
+            raise SystemExit(2)
+        release = promote(root, args.message, True)
+        sha = release["sha"]
+        if cfg.controller.get("ssh_target"):
+            from .controller import remote_deploy
+            deployed = remote_deploy(root, sha)
+        else:
+            from .deployment import deploy_exact
+            deployed = deploy_exact(root, sha)
+        print(json.dumps({"verified": True, "release": release, "deploy": deployed}, indent=2))
+        raise SystemExit(0 if deployed["ok"] else 3)
 
     elif args.command == "chat":
         if not args.request:
