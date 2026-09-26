@@ -53,7 +53,15 @@ CONTEXT:
             raise
         from .controller import remote_ai_complete
         raw=remote_ai_complete(root,prompt)
-    obj=_json_object(raw)
+    try:
+        obj=_json_object(raw)
+    except (ValueError,json.JSONDecodeError):
+        repair="Return ONLY valid JSON matching this schema, with no prose: {\"summary\":\"short\",\"operations\":[{\"action\":\"write\",\"path\":\"relative/path\",\"content\":\"full file content\"}]}. Solve this objective: "+objective+"\nRepository context:\n"+_context(root,plan_file,objective,failures)
+        try: raw=client.complete(repair)
+        except Exception:
+            from .controller import remote_ai_complete
+            raw=remote_ai_complete(root,repair)
+        obj=_json_object(raw)
     if not isinstance(obj.get("operations"),list): raise ValueError("AI operations must be a list")
     return obj
 def apply_operations(root: Path, proposal: dict) -> list[str]:
