@@ -25,6 +25,7 @@ Status: INTERNAL ENGINEERING QUALIFICATION PASSED; Cursor UI restart/handshake p
 - Exact-SHA deployment was proven using DreamSyncQualification.
 - Forced bad health check was proven to rollback automatically from 7443f3d to c16306c while the live Hello Dream Lab app remained working.
 - Qualification app was restored to healthy GitHub/server SHA 50e8e0d.
+- Existing-project autonomous upgrade was then proven: FREE_ONLY reasoning added README.md, encountered a real git-diff formatting failure, autonomously repaired it on attempt 3, reached VERIFIED, and finish_verified deployed exact SHA 18c4bb6f83a7a210ac0f4267f3d3b1ff8e590933 to Linode successfully.
 - Autosync watchdog was repaired and kill/recovery tested: killed PID 24988, watchdog restored autosync as PID 13544.
 - DreamSync deterministic suite expanded from 32 to 35 tests; 35/35 pass on Windows and Linode.
 - Linode final health: zero failed systemd units, QASI active, DreamSync active.
