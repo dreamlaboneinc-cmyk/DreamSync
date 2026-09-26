@@ -10,6 +10,15 @@ def _run(args, cwd: Path, check=True):
 def _service_active(name: str) -> bool:
     return subprocess.run(["systemctl","is-active","--quiet",name]).returncode == 0
 
+def _service_healthy(name: str, mode: str = "auto") -> bool:
+    show = subprocess.run(["systemctl","show",name,"--property=LoadState,ActiveState,Type,Result,ExecMainStatus","--no-pager"], text=True, capture_output=True)
+    props = dict(line.split("=",1) for line in show.stdout.splitlines() if "=" in line)
+    if show.returncode != 0 or props.get("LoadState") != "loaded": return False
+    if mode == "persistent": return props.get("ActiveState") == "active"
+    if mode == "successful_exit": return props.get("Result") == "success" and props.get("ExecMainStatus") == "0"
+    if props.get("Type") == "oneshot": return props.get("Result") == "success" and props.get("ExecMainStatus") == "0"
+    return props.get("ActiveState") == "active"
+
 def _health(url: str, attempts: int=8, delay: float=1.0) -> bool:
     for _ in range(attempts):
         try:
@@ -59,7 +68,8 @@ def deploy_exact(root: Path, sha: str) -> dict:
     _sync_target(root, dep.get("sync_to"))
     for svc in services:
         subprocess.run(["systemctl","restart",svc],check=True)
-    checks={svc:_service_active(svc) for svc in services}
+    service_modes=dep.get("service_health",{})
+    checks={svc:_service_healthy(svc, service_modes.get(svc,"auto")) for svc in services}
     urls={url:_health(url) for url in dep.get("health_urls",[])}
     ok=all(checks.values()) and all(urls.values())
     if ok:
