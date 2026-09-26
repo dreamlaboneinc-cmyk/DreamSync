@@ -35,7 +35,10 @@ def main():
             "promote",
             "deploy",
             "deploy-receive",
+            "discover",
+            "adopt",
         ],
+
     )
     parser.add_argument("--root", default=".")
     parser.add_argument("--plan")
@@ -114,6 +117,16 @@ def main():
 
         print(json.dumps(result, indent=2))
         raise SystemExit(0 if result["ok"] else 3)
+
+    elif args.command == "discover":
+        from .discovery import write_discovery
+
+        print(json.dumps(write_discovery(root), indent=2))
+
+    elif args.command == "adopt":
+        from .projects import adopt_project
+
+        print(json.dumps(adopt_project(root), indent=2))
 
     elif args.command == "deploy-receive":
         if not args.sha:
