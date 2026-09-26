@@ -37,6 +37,9 @@ def main():
             "deploy-receive",
             "discover",
             "adopt",
+            "build",
+            "debug",
+            "upgrade",
         ],
 
     )
@@ -51,6 +54,7 @@ def main():
         default="DreamSync verified promotion",
     )
     parser.add_argument("--sha")
+    parser.add_argument("--request")
 
     args = parser.parse_args()
     cfg = load_project(args.root)
