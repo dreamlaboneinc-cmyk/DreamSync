@@ -40,6 +40,7 @@ def main():
             "build",
             "debug",
             "upgrade",
+            "chat",
         ],
 
     )
@@ -55,6 +56,7 @@ def main():
     )
     parser.add_argument("--sha")
     parser.add_argument("--request")
+    parser.add_argument("--execute", action="store_true")
 
     args = parser.parse_args()
     cfg = load_project(args.root)
@@ -131,6 +133,14 @@ def main():
         from .projects import adopt_project
 
         print(json.dumps(adopt_project(root), indent=2))
+
+    elif args.command == "chat":
+        if not args.request:
+            raise SystemExit("chat requires --request")
+        from .chat import chat, format_chat
+        result = chat(root, args.request, args.execute)
+        print(format_chat(result))
+        raise SystemExit(0 if result["ok"] else 4)
 
     elif args.command == "deploy-receive":
         if not args.sha:
