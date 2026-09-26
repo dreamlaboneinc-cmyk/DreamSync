@@ -27,7 +27,14 @@ def receive_exact(root: str | Path, sha: str) -> dict:
     if not _SHA_RE.fullmatch(sha):
         raise RuntimeError("invalid deployment SHA")
 
-    if _git(root, "status", "--porcelain"):
+    status = _git(root, "status", "--porcelain")
+    dirty=[]
+    for line in status.splitlines():
+        rel=line[3:].replace("\\", "/") if len(line)>3 else ""
+        if rel==".env" or rel.startswith(("data/","state/","backups/","backup/","venv/",".venv/","__pycache__/")):
+            continue
+        dirty.append(line)
+    if dirty:
         raise RuntimeError("server worktree must be clean before deployment")
 
     _git(root, "fetch", "origin", "main")

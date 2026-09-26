@@ -39,7 +39,14 @@ def remote_deploy(root: str | Path = ".", sha: str | None = None) -> dict:
     if not _REMOTE_PATH_RE.fullmatch(remote_project):
         raise RuntimeError("invalid remote project path")
 
-    if _git(root, "status", "--porcelain"):
+    status = _git(root, "status", "--porcelain")
+    dirty = []
+    for line in status.splitlines():
+        rel = line[3:].replace("\\", "/") if len(line) > 3 else ""
+        if rel == ".env" or rel.startswith(("data/","state/","backups/","backup/","venv/",".venv/","__pycache__/")):
+            continue
+        dirty.append(line)
+    if dirty:
         raise RuntimeError("local worktree must be clean before deployment")
 
     requested_sha = sha or _git(root, "rev-parse", "HEAD")
@@ -65,7 +72,7 @@ def remote_deploy(root: str | Path = ".", sha: str | None = None) -> dict:
     )
 
     result = subprocess.run(
-        ["ssh", ssh_target, command],
+        [controller.get("ssh_executable", "ssh"), ssh_target, command],
         text=True,
         capture_output=True,
     )
