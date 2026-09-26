@@ -1,5 +1,7 @@
 param([string]$Root='C:\\Users\\PC1\\DreamLab',[int]$PollSeconds=3,[int]$StableSeconds=10)
 $ErrorActionPreference='Continue'
+$mutex=New-Object Threading.Mutex($false,'DreamSyncAutoSync-'+$env:USERNAME)
+if(-not $mutex.WaitOne(0,$false)){ exit }
 $state=@{}
 $log=Join-Path $Root '.dreamsync-autosync.log'
 function Log([string]$m){ Add-Content $log "$(Get-Date -Format s) $m" }
