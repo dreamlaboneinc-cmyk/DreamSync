@@ -25,6 +25,13 @@ def _protocol(root: Path, name: str, discovery: dict) -> None:
         "protected_paths": [".env", "data", "state", ".git", "backups"],
     }
     (ds / "project.yml").write_text(yaml.safe_dump(project, sort_keys=False))
+    ignore=root/".gitignore"
+    existing=ignore.read_text(errors="replace") if ignore.exists() else ""
+    required=["state/",".dreamsync/local.yml",".dreamsync/missions/","__pycache__/","*.pyc"]
+    lines=existing.splitlines()
+    for item in required:
+        if item not in lines: lines.append(item)
+    ignore.write_text("\n".join(lines).strip()+"\n",encoding="utf-8",newline="\n")
     (root / "BUILD.md").write_text(
         f"# {name} Build Contract\n\n## Goal\nDescribe the intended app or change.\n\n"
         "## Requirements\n- Define required behavior.\n\n## Acceptance Criteria\n"

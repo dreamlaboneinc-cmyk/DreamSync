@@ -63,6 +63,10 @@ def verify(root: str|Path='.') -> dict:
     gates.append(_run(root,'git diff --check'))
     for group in ('dependency','compile','lint','test','acceptance'):
         for cmd in cfg.verification.get(group,[]) or []: gates.append(_run(root,cmd))
+    if not cfg.verification.get('test'):
+        files=repo_files(root)
+        if any(Path(f).name.startswith('test_') and f.endswith('.py') for f in files):
+            gates.append(_run(root,'{python} -m unittest discover -v'))
     vid=str(uuid.uuid4())
     result={'verification_id':vid,'verified':all(g.ok for g in gates),'base_sha':head_sha(root),'worktree_fingerprint':fingerprint(root),'timestamp':time.time(),'gates':[asdict(g) for g in gates]}
     out=root/'state'/'last_verification.json'; out.parent.mkdir(exist_ok=True); out.write_text(json.dumps(result,indent=2))

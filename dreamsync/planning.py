@@ -15,5 +15,9 @@ def create_plan(root: str | Path, request: str) -> dict:
             raise
         from .controller import remote_ai_complete
         text=remote_ai_complete(root,prompt)
+    lines=text.strip().splitlines()
+    if lines and lines[0].strip().startswith("```"): lines=lines[1:]
+    if lines and lines[-1].strip()=="```": lines=lines[:-1]
+    text="\n".join(line.rstrip() for line in lines)
     (root/"BUILD.md").write_text(text.rstrip()+"\n",encoding="utf-8",newline="\n")
     return {"ok":True,"phase":"PLANNED","file":"BUILD.md","billing_mode":"FREE_ONLY"}
