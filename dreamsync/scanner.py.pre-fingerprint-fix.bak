@@ -11,10 +11,7 @@ def _git(root: Path, *args: str) -> list[str]:
 
 def repo_files(root: Path) -> list[str]:
     # Tracked + untracked/non-ignored files; Git itself defines exclusions.
-    files=set(_git(root,"ls-files") + _git(root,"ls-files","--others","--exclude-standard"))
-    # Runtime/protected state is never part of the source snapshot.
-    protected=(".env","data/","state/","backups/","backup/","venv/",".venv/","__pycache__/")
-    return sorted(f for f in files if not (f==".env" or f.startswith(protected)))
+    return sorted(set(_git(root,"ls-files") + _git(root,"ls-files","--others","--exclude-standard")))
 
 def _imports(root: Path, files: list[str]) -> dict[str,list[str]]:
     out={}
