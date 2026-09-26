@@ -20,7 +20,7 @@ def _json_object(text: str) -> dict:
         if a<0 or b<=a: raise ValueError("AI response did not contain JSON")
         return json.loads(text[a:b+1])
 def _context(root: Path, plan_file: str|None, objective: str, failures: list|None=None) -> str:
-    files=repo_files(root); chunks=[]; used=0; budget=30000
+    files=repo_files(root); chunks=[]; used=0; budget=8000
     for rel in files:
         p=root/rel
         if p.suffix.lower() not in TEXT_EXT: continue
@@ -41,7 +41,8 @@ def _context(root: Path, plan_file: str|None, objective: str, failures: list|Non
 def propose(root: Path, objective: str, plan_file: str|None=None, failures: list|None=None) -> dict:
     cfg=load_project(root)
     prompt='''You are the coding brain for DreamSync. Return ONLY JSON, no markdown.
-Schema: {"summary":"short","operations":[{"action":"write","path":"relative/path","content":"full file content"}]}
+Schema: {"summary":"short","operations":[{"action":"write","path":"relative/path","content":"full file content"}],"ask_user":null}
+If a required credential, destructive database action, ambiguous production target, irreversible infrastructure change, source-of-truth conflict, or unknown secret prevents safe work, set operations to [] and ask_user to exactly one focused question. Otherwise ask_user must be null.
 Rules: solve the objective using the supplied repository and plan. Use only write operations. Never write secrets, .env, credentials, state, data, backups, .git, or virtual environments. Do not propose shell commands. Preserve working code unless a change is needed. Include complete content for every file you change. If verification failures are supplied, repair them.
 CONTEXT:
 '''+_context(root,plan_file,objective,failures)
@@ -83,6 +84,10 @@ def run_autonomous(root: Path, objective: str, plan_file: str|None=None, retries
     for attempt in range(retries+1):
         failures=history[-1].get("failed_gates",[]) if history else []
         proposal=propose(root,objective,plan_file,failures)
+        if proposal.get("ask_user"):
+            out={"ok":False,"phase":"ASK_USER","objective":objective,"question":str(proposal["ask_user"]),"attempts":history,"started":started,"finished":time.time()}
+            (root/"state"/"last_autonomous_mission.json").write_text(json.dumps(out,indent=2),encoding="utf-8")
+            return out
         changed=apply_operations(root,proposal)
         result=verify(root)
         failed=[g for g in result["gates"] if not g["ok"]]

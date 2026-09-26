@@ -29,14 +29,16 @@ def _health(url: str, attempts: int=8, delay: float=1.0) -> bool:
         time.sleep(delay)
     return False
 
-def _sync_target(root: Path, target: str | None) -> None:
+def _sync_target(root: Path, target: str | None, dep: dict | None = None) -> None:
     if not target:
         return
+    dep=dep or {}
     target_path = Path(target)
     if not target_path.is_absolute():
         raise RuntimeError("deploy sync_to must be an absolute path")
-    excludes = [".git", ".env", "venv", ".venv", "data", "state", "backups", "backup", "uploads", "models", "__pycache__"]
-    args = ["rsync", "-a", "--delete"]
+    excludes = [".git", ".env", "venv", ".venv", "data", "state", "backups", "backup", "uploads", "models", "__pycache__"] + dep.get("runtime_excludes",[])
+    args = ["rsync", "-a"]
+    if dep.get("delete",False): args.append("--delete")
     for item in excludes:
         args += ["--exclude", item]
     args += [str(root) + "/", str(target_path) + "/"]
@@ -65,7 +67,13 @@ def deploy_exact(root: Path, sha: str) -> dict:
         try: previous=json.loads(known.read_text()).get("sha")
         except Exception: previous=None
     services=dep.get("services",[])
-    _sync_target(root, dep.get("sync_to"))
+    live=dep.get("sync_to")
+    if live:
+        from .drift import compare_saved
+        drift=compare_saved(root,live,dep.get("runtime_excludes",[]))
+        if not drift["ok"]:
+            raise RuntimeError("production source drift detected: "+", ".join(drift["drift"][:20]))
+    _sync_target(root, live, dep)
     for svc in services:
         subprocess.run(["systemctl","restart",svc],check=True)
     service_modes=dep.get("service_health",{})
@@ -74,12 +82,15 @@ def deploy_exact(root: Path, sha: str) -> dict:
     ok=all(checks.values()) and all(urls.values())
     if ok:
         known.parent.mkdir(exist_ok=True); known.write_text(json.dumps({"sha":sha},indent=2))
+        if live:
+            from .drift import save as save_manifest
+            save_manifest(root,live,sha,dep.get("runtime_excludes",[]))
         state.release(sha,"known-good"); state.event("deploy",{"sha":sha,"ok":True,"services":checks,"urls":urls})
         return {"ok":True,"sha":sha,"services":checks,"health":urls,"rollback":False}
     state.release(sha,"failed-health")
     if dep.get("rollback") and previous and previous != sha:
         _run(["git","reset","--hard",previous],root)
-        _sync_target(root, dep.get("sync_to"))
+        _sync_target(root, dep.get("sync_to"), dep)
         for svc in services: subprocess.run(["systemctl","restart",svc],check=False)
         state.event("rollback",{"failed_sha":sha,"restored_sha":previous})
         return {"ok":False,"sha":sha,"services":checks,"health":urls,"rollback":True,"restored":previous}
