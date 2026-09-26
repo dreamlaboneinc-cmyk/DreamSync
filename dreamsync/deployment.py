@@ -20,6 +20,20 @@ def _health(url: str, attempts: int=8, delay: float=1.0) -> bool:
         time.sleep(delay)
     return False
 
+def _sync_target(root: Path, target: str | None) -> None:
+    if not target:
+        return
+    target_path = Path(target)
+    if not target_path.is_absolute():
+        raise RuntimeError("deploy sync_to must be an absolute path")
+    excludes = [".git", ".env", "venv", ".venv", "data", "state", "backups", "backup", "uploads", "models", "__pycache__"]
+    args = ["rsync", "-a", "--delete"]
+    for item in excludes:
+        args += ["--exclude", item]
+    args += [str(root) + "/", str(target_path) + "/"]
+    subprocess.run(args, check=True)
+
+
 def deploy_exact(root: Path, sha: str) -> dict:
     cfg=load_project(root); root=cfg.root; dep=cfg.raw.get("deploy",{})
     if _run(["git","status","--porcelain"],root).stdout.strip():
@@ -36,6 +50,7 @@ def deploy_exact(root: Path, sha: str) -> dict:
         try: previous=json.loads(known.read_text()).get("sha")
         except Exception: previous=None
     services=dep.get("services",[])
+    _sync_target(root, dep.get("sync_to"))
     for svc in services:
         subprocess.run(["systemctl","restart",svc],check=True)
     checks={svc:_service_active(svc) for svc in services}
@@ -48,6 +63,7 @@ def deploy_exact(root: Path, sha: str) -> dict:
     state.release(sha,"failed-health")
     if dep.get("rollback") and previous and previous != sha:
         _run(["git","reset","--hard",previous],root)
+        _sync_target(root, dep.get("sync_to"))
         for svc in services: subprocess.run(["systemctl","restart",svc],check=False)
         state.event("rollback",{"failed_sha":sha,"restored_sha":previous})
         return {"ok":False,"sha":sha,"services":checks,"health":urls,"rollback":True,"restored":previous}

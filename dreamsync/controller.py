@@ -53,10 +53,15 @@ def remote_deploy(root: str | Path = ".", sha: str | None = None) -> dict:
         )
 
     project = shlex.quote(remote_project)
-    python = shlex.quote(f"{remote_project}/venv/bin/python")
+    runtime_root = controller.get("dreamsync_runtime", "/root/apps/DreamSync")
+    if not _REMOTE_PATH_RE.fullmatch(runtime_root):
+        raise RuntimeError("invalid DreamSync runtime path")
+    python = shlex.quote(f"{runtime_root}/venv/bin/python")
+    pythonpath = shlex.quote(runtime_root)
     command = (
         f"cd {project} && "
-        f"{python} -m dreamsync.cli deploy-receive --sha {requested_sha}"
+        f"PYTHONPATH={pythonpath} {python} -m dreamsync.cli "
+        f"deploy-receive --sha {requested_sha}"
     )
 
     result = subprocess.run(
