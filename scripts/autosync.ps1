@@ -1,7 +1,7 @@
 param([string]$Root='C:\Users\PC1\DreamLab',[int]$PollSeconds=5,[int]$QuietSeconds=8)
 $ErrorActionPreference='Continue'
-$mutex=New-Object Threading.Mutex($false,'DreamSyncAutoSync-'+$env:USERNAME)
-if(-not $mutex.WaitOne(0,$false)){ exit }
+$lockPath=Join-Path $Root '.dreamsync-autosync.lock'
+try { $lock=[IO.File]::Open($lockPath,[IO.FileMode]::OpenOrCreate,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None) } catch { exit }
 $log=Join-Path $Root '.dreamsync-autosync.log'
 $cli='C:\Users\PC1\DreamLab\DreamSync\dreamsync.cmd'
 $seen=@{}
