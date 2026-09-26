@@ -19,7 +19,7 @@ while($true){
     $seen[$name]=$now.AddYears(1)
     Log "VERIFYING $name"
     $msg='autosync: '+(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
-    & $cli promote --root $repo --message $msg >> $log 2>&1
+    & $cli finish --root $repo --message $msg >> $log 2>&1
     if($LASTEXITCODE -eq 0){ Log "VERIFIED_PUSHED $name" } else { Log "BLOCKED $name"; $seen[$name]=$now }
   }
   Start-Sleep -Seconds $PollSeconds
