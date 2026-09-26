@@ -13,6 +13,8 @@ def promote(root: Path, message: str, push: bool=True) -> dict:
         raise RuntimeError("verification failed; promotion blocked")
     expected=before["worktree_fingerprint"]
     _git(root,"add","-A")
+    # Verification creates runtime state; it must never enter a source commit.
+    _git(root,"reset","--","state",check=False)
     staged=_git(root,"diff","--cached","--name-only").stdout.splitlines()
     protected=(".env","data/","state/","backups/","venv/",".venv/")
     bad=[p for p in staged if p==".env" or p.startswith(protected)]
