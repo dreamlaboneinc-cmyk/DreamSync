@@ -48,6 +48,17 @@ def receive_exact(root: str | Path, sha: str) -> dict:
 
     previous_sha = _git(root, "rev-parse", "HEAD")
 
+    # SAFETY: deployments are forward-only. Never silently rewind or
+    # replace a running application's verified Git history.
+    ancestry = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", previous_sha, sha],
+        cwd=root, text=True, capture_output=True,
+    )
+    if ancestry.returncode != 0:
+        raise RuntimeError(
+            f"refusing non-forward deployment: current {previous_sha[:12]} -> requested {sha[:12]}"
+        )
+
     try:
         _git(root, "reset", "--hard", sha)
         result = deploy_exact(root, sha)
