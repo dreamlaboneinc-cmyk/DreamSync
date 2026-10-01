@@ -22,6 +22,9 @@ def sync_once(apps_root: str | Path = "/root/apps") -> list[dict]:
             continue
         if root.name == "DreamSync_qualification":
             continue
+        if (root / ".dreamsync" / "DEPLOYMENT_LOCKED").exists():
+            results.append({"project": root.name, "status": "DEPLOYMENT_LOCKED"})
+            continue
         try:
             if _git(root, "status", "--porcelain"):
                 results.append({"project": root.name, "status": "BLOCKED_DIRTY"})
